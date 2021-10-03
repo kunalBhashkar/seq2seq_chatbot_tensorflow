@@ -82,6 +82,8 @@ def serve_chat(checkpointfile, port):
 
 
 if __name__ == "__main__":
-    print("Hello!")
-    serve_chat("models/csv/20211003_101804/best_weights_training.ckpt", 8080)
+    print(f"starting web server..")
+    checkpoint_file = "models/csv/20211003_110151/best_weights_training.ckpt"
+    port = 8080
 
+    serve_chat(checkpoint_file, port)

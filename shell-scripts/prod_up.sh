@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker pull gcr.io/fir-sandbox-326008/chat-bot:packaged
+
 docker run --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$PWD:$PWD" \

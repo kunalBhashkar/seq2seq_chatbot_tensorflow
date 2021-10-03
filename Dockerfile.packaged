@@ -1,0 +1,3 @@
+FROM chat-bot:latest
+
+COPY ./ /home/appuser/workspace

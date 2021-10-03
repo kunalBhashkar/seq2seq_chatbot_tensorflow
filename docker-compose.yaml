@@ -32,6 +32,19 @@ services:
         limits:
           cpus: "6.00"
 
+  train-csv:
+    image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    command: python train.py --datasetdir datasets/csv
+    deploy:
+      resources:
+        limits:
+          cpus: "6.00"
+
   chat-web:
     image: chat-bot:latest
     volumes:
