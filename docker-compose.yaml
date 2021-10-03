@@ -45,8 +45,19 @@ services:
         limits:
           cpus: "6.00"
 
-  chat-web:
+  chat-web-dev:
     image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    ports:
+      - 8080:8080
+    command: python chat_web.py
+
+  chat-web-prod:
+    image: gcr.io/fir-sandbox-326008/chat-bot:packaged
     volumes:
       - ./:/home/appuser/workspace
     working_dir: /home/appuser/workspace
