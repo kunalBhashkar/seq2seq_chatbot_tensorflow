@@ -73,8 +73,6 @@ with ChatbotModel(mode = "train",
                   input_vocabulary = dataset.input_vocabulary,
                   output_vocabulary = dataset.output_vocabulary,
                   model_dir = model_dir) as model:
-
-    print()
     
     #Restore from checkpoint if specified
     best_train_checkpoint = "best_weights_training.ckpt"
@@ -101,7 +99,8 @@ with ChatbotModel(mode = "train",
     backup_on_training_loss = sorted(hparams.training_hparams.backup_on_training_loss.copy(), reverse=True)
 
     #Train on all batches in epoch
-    for epoch in range(1, hparams.training_hparams.epochs + 1):
+    for i, epoch in enumerate(range(1, hparams.training_hparams.epochs + 1)):
+        print(f"Starting epoch {i}")
         batch_counter = 0
         batches_starting_time = time.time()
         batches_total_train_loss = 0
@@ -205,4 +204,3 @@ with ChatbotModel(mode = "train",
         training_stats.save(training_stats_filepath)
         print('Model saved.')
     print("Training Complete!")        
-            

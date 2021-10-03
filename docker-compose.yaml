@@ -1,0 +1,61 @@
+version: "3.3"
+
+services:
+  bash:
+    image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    command: bash
+
+  resolve-dependencies:
+    image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    command: pip-compile -r ./requirements.in
+
+  train-movies:
+    image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    command: python train.py --datasetdir datasets/cornell_movie_dialog
+    deploy:
+      resources:
+        limits:
+          cpus: "6.00"
+
+  chat-web:
+    image: chat-bot:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    ports:
+      - 8080:8080
+    command: python chat_web.py
+
+  jupyter:
+    image: ml-kit:latest
+    volumes:
+      - ./:/home/appuser/workspace
+    working_dir: /home/appuser/workspace
+    ports:
+      - "8888:8888"
+    networks:
+      - chat-bot-network
+    command: jupyter lab --ip 0.0.0.0
+
+networks:
+  chat-bot-network:
+    driver: bridge
+    ipam:
+      driver: default

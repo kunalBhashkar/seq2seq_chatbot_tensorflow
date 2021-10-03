@@ -17,13 +17,10 @@ from vocabulary import Vocabulary
 app = Flask(__name__)
 CORS(app)
 
-@app.cli.command()
-@click.argument("checkpointfile")
-@click.option("-p", "--port", type=int)
 def serve_chat(checkpointfile, port):
 
     api = Api(app)
-
+    print("Starting the app")
     #Read the hyperparameters and configure paths
     model_dir, hparams, checkpoint = general_utils.initialize_session_server(checkpointfile)
 
@@ -81,4 +78,10 @@ def serve_chat(checkpointfile, port):
 
         api.add_resource(Answer, "/chat/<string:question>")
         api.add_resource(UI, "/chat_ui/")
-        app.run(debug=False, port=port)
+        app.run(debug=False, port=port, host="0.0.0.0")
+
+
+if __name__ == "__main__":
+    print("Hello!")
+    serve_chat("models/csv/20211003_101804/best_weights_training.ckpt", 8080)
+

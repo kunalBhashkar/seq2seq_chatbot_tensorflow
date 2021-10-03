@@ -61,3 +61,6 @@ The following python packages are used in seq2seq-chatbot:
     pip install flask==0.12.4
     pip install --upgrade flask-restful
     ```
+
+
+Forked after cloning, configured new repo according to this guide: https://gist.github.com/jagregory/710671
