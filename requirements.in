@@ -10,3 +10,4 @@ flask==0.12.4  # downgraded, to match README instructions
 Flask-RESTful  # floating, let flask dep decide
 Flask-Cors     # floating, let flask dep decide
 jsonpickle==2.0.0
+uvicorn==0.15.0

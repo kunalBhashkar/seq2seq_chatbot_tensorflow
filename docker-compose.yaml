@@ -45,6 +45,15 @@ services:
         limits:
           cpus: "6.00"
 
+  chat-web:
+    image: gcr.io/fir-sandbox-326008/chat-bot:packaged
+    working_dir: /home/appuser/workspace
+    networks:
+      - chat-bot-network
+    ports:
+      - 8080:8080
+    command: python chat_web.py
+
   chat-web-dev:
     image: chat-bot:latest
     volumes:
@@ -56,16 +65,17 @@ services:
       - 8080:8080
     command: python chat_web.py
 
-  chat-web-prod:
-    image: gcr.io/fir-sandbox-326008/chat-bot:packaged
+  pipeline-glassdoor-to-seq2seq-csv:
+    image: dev-kit:latest
+    working_dir: /home/appuser/workspace
     volumes:
       - ./:/home/appuser/workspace
-    working_dir: /home/appuser/workspace
+      - ~/data/:/home/appuser/data
     networks:
       - chat-bot-network
     ports:
       - 8080:8080
-    command: python chat_web.py
+    command: python pipelines/transform_glassdoor_interview.py
 
   jupyter:
     image: ml-kit:latest

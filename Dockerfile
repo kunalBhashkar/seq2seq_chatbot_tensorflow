@@ -2,15 +2,15 @@ FROM python:3.6-slim
 
 USER root
 RUN apt-get update
-RUN apt-get install -y \
-    gcc \
-    curl \
-    python3-dev \
-    python3-pip \
-    libxml2-dev \
-    libxslt1-dev \
-    zlib1g-dev \
-    g++
+# RUN apt-get install -y \
+#     gcc \
+#     curl \
+#     python3-dev \
+#     python3-pip \
+#     libxml2-dev \
+#     libxslt1-dev \
+#     zlib1g-dev \
+#     g++
 
 # Don't run rest as root
 RUN useradd -ms /bin/bash appuser
@@ -30,5 +30,7 @@ COPY ./requirements.txt ./requirements.txt
 RUN pip install --user -r ./requirements.txt
 
 WORKDIR /home/appuser/workspace
+ENV PATH="${PATH}:/home/appuser/.local/bin"
+ENV PYTHONPATH "${PYTHONPATH}:/home/appuser/workspace"
 
 # CMD omitted intentionally

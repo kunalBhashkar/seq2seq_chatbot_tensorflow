@@ -10,12 +10,16 @@ absl-py==0.14.1
     #   tensorflow
 aniso8601==9.0.1
     # via flask-restful
+asgiref==3.4.1
+    # via uvicorn
 astor==0.8.1
     # via tensorflow
 attrs==21.2.0
     # via pytest
 click==7.1.2
-    # via flask
+    # via
+    #   flask
+    #   uvicorn
 dataclasses==0.8
     # via
     #   pydantic
@@ -39,6 +43,8 @@ grpcio==1.41.0
     # via
     #   tensorboard
     #   tensorflow
+h11==0.12.0
+    # via uvicorn
 h5py==2.10.0
     # via
     #   keras-applications
@@ -139,7 +145,12 @@ termcolor==1.1.0
 toml==0.10.2
     # via pytest
 typing-extensions==3.10.0.2
-    # via importlib-metadata
+    # via
+    #   asgiref
+    #   importlib-metadata
+    #   uvicorn
+uvicorn==0.15.0
+    # via -r ./requirements.in
 werkzeug==2.0.1
     # via
     #   flask

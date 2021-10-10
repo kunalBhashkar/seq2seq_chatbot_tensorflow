@@ -312,11 +312,14 @@ class ChatbotModel(object):
             answers: array of answer beams if chat_settings.show_all_beams = True otherwise the single selected answer.
             
         """
+        print(f"Raw question={question}")
         #Process the question by cleaning it and converting it to an integer encoded vector
         if chat_settings.enable_auto_punctuation:
             question = Vocabulary.auto_punctuate(question)
         question = Vocabulary.clean_text(question, normalize_words = chat_settings.inference_hparams.normalize_words)
+        print(f"Cleaned question={question}")
         question = self.input_vocabulary.words2ints(question)
+        print(f"question2ints={question}")
         
         #Prepend the currently tracked steps of the conversation history separated by EOS tokens.
         #This allows for deeper dialog context to influence the answer prediction.

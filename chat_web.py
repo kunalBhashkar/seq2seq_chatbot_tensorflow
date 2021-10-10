@@ -6,13 +6,22 @@ import click
 from os import path
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 
 import general_utils
 import chat_command_handler
 from chat_settings import ChatSettings
 from chatbot_model import ChatbotModel
 from vocabulary import Vocabulary
+
+
+### Configs: TODO: YAML it up
+
+
+COOKIE_SECRET = "THIS_NEEDS_TO_BE_SET_CORRECTLY" # TODO: <--|
+COOKIE_LIFETIME_SECONDS: int = 3_600
+COOKIE_NAME = "c-is-for-cookie"
+
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +46,10 @@ def serve_chat(checkpointfile, port):
         output_vocab_filepath = path.join(model_dir, Vocabulary.OUTPUT_VOCAB_FILENAME)
         output_vocabulary = Vocabulary.load(output_vocab_filepath)
 
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('question', type=str)
+
     #Create the model
     print ("Initializing model...")
     print()
@@ -58,6 +71,7 @@ def serve_chat(checkpointfile, port):
         
         class Answer(Resource):
             def get(self, question):
+                question = question.replace("_", "-")
                 is_command, terminate_chat, _ = chat_command_handler.handle_command(question, model, chat_settings)
                 if terminate_chat:
                     answer = "[Can't terminate from http request]"
@@ -66,24 +80,16 @@ def serve_chat(checkpointfile, port):
                 else:
                     #If it is not a command (it is a question), pass it on to the chatbot model to get the answer
                     _, answer = model.chat(question, chat_settings)
-                    
-                    if chat_settings.inference_hparams.log_chat:
-                        chat_command_handler.append_to_chatlog(chatlog_filepath, question, answer)
 
                 return answer
 
-        class UI(Resource):
-            def get(self):
-                return send_from_directory(".", "chat_ui.html")
-
         api.add_resource(Answer, "/chat/<string:question>")
-        api.add_resource(UI, "/chat_ui/")
         app.run(debug=False, port=port, host="0.0.0.0")
 
 
 if __name__ == "__main__":
     print(f"starting web server..")
-    checkpoint_file = "models/csv/20211003_110151/best_weights_training.ckpt"
+    checkpoint_file = "models/trained_model_v2/best_weights_training.ckpt"
     port = 8080
 
     serve_chat(checkpoint_file, port)
